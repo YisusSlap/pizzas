@@ -23,8 +23,8 @@ public class PizzaDAO {
         // Configura la conexión a la base de datos
         try {
             String url = "jdbc:mysql://localhost:3306/PizzaDatabase";
-            String user = "root";
-            String password = "03Julio1979";
+            String user = "nombredeusuario";
+            String password = "contraseña";
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             e.printStackTrace();

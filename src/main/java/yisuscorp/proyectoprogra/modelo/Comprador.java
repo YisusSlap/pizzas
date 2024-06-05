@@ -29,7 +29,7 @@ public class Comprador extends Entidad {
     private int tipo = 1;
     private boolean estaMoviendose = false, corriendo = false;
     private int tickAnimacion;
-    private int velocidadAnimacion = 10;
+    private int velocidadAnimacion = 9;
     private int indiceAnimacion;
     private int accionActual = constantesComprador.INACTIVO;
     

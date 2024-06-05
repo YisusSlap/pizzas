@@ -48,4 +48,39 @@ public class Constantes {
             }
         }
     }
+    
+    public static class constantesCocinero{
+        public static final int INACTIVO      =  0;
+        public static final int CAMINAR       =  4;
+        public static final int ENCARRERARSE  =  5;
+        public static final int DARSELAVUELTA =  3;
+        public static final int CORRER        =  1;
+        public static final int COCINAR       =  2;
+        public static final int CAMINARPIZZA  =  6; 
+        public static final int CORRERPIZZA   =  7;
+
+        public static int longitudAccion(int accionCocinero) {
+            switch (accionCocinero) {
+                case INACTIVO:
+                    return 1;
+                case CAMINAR:
+                    return 0;
+                case ENCARRERARSE:
+                    return 0;
+                case DARSELAVUELTA:
+                    return 0;
+                case CORRER:
+                    return 4;
+                case CAMINARPIZZA:
+                    return 0;
+                case CORRERPIZZA:
+                    return 8;
+                case COCINAR:
+                    return 8;                              
+                default:
+                    return 1;
+            }
+            
+        }
+    }
 }

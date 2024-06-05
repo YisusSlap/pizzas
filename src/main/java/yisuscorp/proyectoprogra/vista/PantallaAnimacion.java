@@ -5,6 +5,8 @@
 package yisuscorp.proyectoprogra.vista;
 
 import yisuscorp.proyectoprogra.controlador.EntradasDeTeclado;
+import yisuscorp.proyectoprogra.modelo.Cocinero;
+import yisuscorp.proyectoprogra.modelo.Pizza;
 import yisuscorp.proyectoprogra.modelo.Comprador;
 import yisuscorp.proyectoprogra.modelo.Inventario;
 import javax.swing.*;
@@ -19,13 +21,16 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     private static final int ANCHURA_VENTANA = 1000;
     private static final int ALTURA_VENTANA = 532;
     private static Comprador comprador;
-    private Inventario invPizza = new Inventario(8);
+    private static Inventario invPizza = new Inventario(8);
+    private static Cocinero cocinero;
 
     public PantallaAnimacion() {
         cargarFondo();
         definirTamañoPanel();
-        comprador = new Comprador(100, 375, 32, 41, 3, 8, 1, 4f);
+        comprador = new Comprador(50, 375, 32, 41, 3, 8, 1, 4f);
+        cocinero = new Cocinero(400, 360, 65, 50, 3, 11);
         invPizza.cargarImagenInventario();
+        
         setFocusable(true);
         addKeyListener(new EntradasDeTeclado(this));
     }
@@ -41,6 +46,10 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     public static Comprador getComprador() {
         return comprador;
     }
+    
+    public static Inventario getInvPizza(){
+        return invPizza;
+    }
 
     private void definirTamañoPanel() {
         Dimension size = new Dimension(ANCHURA_VENTANA, ALTURA_VENTANA);
@@ -49,6 +58,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
 
     public void logicaPantalla() {
         comprador.logicaComprador();
+        cocinero.logicaCocinero();
     }
 
     @Override
@@ -58,8 +68,9 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         g.drawImage(fondo, 0, 0, ANCHURA_VENTANA, ALTURA_VENTANA, this);
         // Dibuja otros elementos, como el comprador
         comprador.renderizarComprador(g);
+        cocinero.renderizarCocinero(g);
         // Dibuja el inventario
-        invPizza.renderizarInventario(g, 120);  // Asegúrate de usar getX() para obtener la coordenada x del Comprador
+        invPizza.renderizarInventario(g, 600); // Usa comprador.getX() para obtener la coordenada x del Comprador
     }
 
     @Override

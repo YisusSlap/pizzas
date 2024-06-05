@@ -30,6 +30,7 @@ public class Inventario {
     }
 
     public void renderizarInventario(Graphics g, float xEntidad) {
+        System.out.println("Renderizando inventario con tamaño: " + inventarioPizzas.size()); // Debug
         if (inventarioPizzas.size() > 0) {
             g.drawImage(hojaDeAnimacion[mapa[inventarioPizzas.size()]], (int) xEntidad, 300, null);
         }
@@ -39,9 +40,12 @@ public class Inventario {
         try {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/PizzaHealth.png"));
             hojaDeAnimacion = new BufferedImage[9];
+            int nuevoAnchoPizza = 40; // Nuevo ancho deseado para la pizza
+            int nuevoAltoPizza = 50; // Nuevo alto deseado para la pizza
             for (int x = 0; x < hojaDeAnimacion.length; x++) {
-                hojaDeAnimacion[x] = img.getSubimage(x * 107, 0, 107, 121);
+                hojaDeAnimacion[x] = img.getSubimage(x * 107, 0, nuevoAnchoPizza, nuevoAltoPizza);
             }
+            System.out.println("Imagenes de inventario cargadas correctamente"); // Debug
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,7 +64,10 @@ public class Inventario {
     }
 
     public boolean hayEspacioParaPizza() {
-        return inventarioPizzas.size() < tamañoInventario;
+        if (inventarioPizzas.size() < tamañoInventario) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isEmpty() {

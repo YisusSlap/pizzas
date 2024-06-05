@@ -8,8 +8,8 @@ package yisuscorp.proyectoprogra.modelo;
  *
  * @author jesus
  */
-import yisuscorp.proyectoprogra.modelo.Constantes.constantesCocinero;
 import yisuscorp.proyectoprogra.vista.PantallaAnimacion;
+import yisuscorp.proyectoprogra.modelo.Constantes.constantesCocinero;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 
 public class Cocinero extends Entidad {
     private int velocidadMovimiento = 2;
-    private Inventario inventarioPizzas = new Inventario(2);
+    private Inventario inventarioPizzas = new Inventario(1);
     private int numeroOrden= 0;
     private int tickCocinar = 0;
     private BufferedImage[][] hojaDeAnimacion;
@@ -32,61 +32,26 @@ public class Cocinero extends Entidad {
         super(x, y, w * 4, h * 4);
         cargarAnimaciones(filas, columnas, w, h);
         inventarioPizzas.cargarImagenInventario();
+        setAccionActual(constantesCocinero.INACTIVO);
     }
 
     public void logicaCocinero() {
-        actualizarPosicion();
         actualizarHitbox();
-        elegirDireccion();
         actualizarFrameAnimacion();
 
-        if (estaMoviendose) {
-            checarLocalizacion();
-        } else {
-            if (estaEnCocina) {
-                if (inventarioPizzas.hayEspacioParaPizza()) {
-                    crearPizza();
-                }
-            }
-            if (mesitaAlcanzable) {
-                if (PantallaAnimacion.getInvPizza().hayEspacioParaPizza() && !inventarioPizzas.isEmpty()) {
-                    PantallaAnimacion.getInvPizza().push(inventarioPizzas.getInventarioPizzas().pop());
-                }
-            }
+        if (inventarioPizzas.hayEspacioParaPizza()) {
+            crearPizza();
+            setAccionActual(constantesCocinero.COCINAR);
+        } else{
+            setAccionActual(constantesCocinero.INACTIVO);
         }
-        setAccionActual();
-    }
-
-    private void actualizarPosicion() {
-        estaMoviendose = false;
-    }
-
-    public void checarLocalizacion() {
-        if (x < 800 && x > 600) {
-            estaEnCocina = true;
-        } else {
-            estaEnCocina = false;
+            
+        if (PantallaAnimacion.getInvPizza().hayEspacioParaPizza() && !inventarioPizzas.isEmpty()) {
+            PantallaAnimacion.getInvPizza().push(inventarioPizzas.pop());
         }
-        if (x > 600 && x < 600 + 130) {
-            mesitaAlcanzable = true;
-        } else {
-            mesitaAlcanzable = false;
-        }
-    }
-
-    public void elegirDireccion() {
-        if (inventarioPizzas.isEmpty() && !estaEnCocina) {
-            xVolteado = ancho;
-            anchoVolteado = -1;
-            x += velocidadMovimiento;
-            estaMoviendose = true;
-        }
-        if (!inventarioPizzas.hayEspacioParaPizza() && !mesitaAlcanzable && x >= 600) {
-            xVolteado = 0;
-            anchoVolteado = 1;
-            x -= velocidadMovimiento;
-            estaMoviendose = true;
-        }
+        
+        
+            
     }
 
     public void crearPizza() {
@@ -105,7 +70,7 @@ public class Cocinero extends Entidad {
 
     private int tickAnimacion;
     private int indiceAnimacion;
-    private final int velocidadAnimacion = 9;
+    private final int velocidadAnimacion = 10;
     private int accionActual = constantesCocinero.INACTIVO;
     private boolean estaMoviendose = false, corriendo = false;
 
@@ -114,44 +79,22 @@ public class Cocinero extends Entidad {
 
     public void renderizarCocinero(Graphics g) {
         g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y, anchoHoja * anchoVolteado, alturaHoja, null);
-        inventarioPizzas.renderizarInventario(g, x);
+        inventarioPizzas.renderizarInventario(g, 750);
     }
 
     private void actualizarFrameAnimacion() {
         tickAnimacion++;
-    if (tickAnimacion >= velocidadAnimacion) {
-        tickAnimacion = 0;
-        indiceAnimacion++;
-        if (indiceAnimacion >= constantesCocinero.longitudAccion(accionActual)) {
-            indiceAnimacion = 0;
-            if (estaMoviendose && !corriendo) {
-                corriendo = true;
+        if (tickAnimacion >= velocidadAnimacion) {
+            tickAnimacion = 0;
+            indiceAnimacion++;
+            if (indiceAnimacion >= 2) { // Solo hay dos estados de animación: Cocinar e Inactivo
+                indiceAnimacion = 0;
             }
-        }
-    }
-    }
-
-    public void setAccionActual() {
-        int animacionInicio = accionActual;
-        if (estaMoviendose) {
-            if (corriendo) {
-                accionActual = constantesCocinero.CORRER;
-            }
-        } else {
-            if (estaEnCocina) {
-                accionActual = constantesCocinero.COCINAR;
-            } else {
-                accionActual = constantesCocinero.INACTIVO;
-            }
-        }
-        if (animacionInicio != accionActual) {
-            resetearAnimacion();
         }
     }
 
-    private void resetearAnimacion() {
-        tickAnimacion = 0;
-        indiceAnimacion = 0;
+    public void setAccionActual(int accionActual) {
+        this.accionActual=accionActual;
     }
 
     public void cargarAnimaciones(int filas, int columnas,int anchoMarco,int altoMarco) {
@@ -168,4 +111,3 @@ public class Cocinero extends Entidad {
         }
     }
 }
-

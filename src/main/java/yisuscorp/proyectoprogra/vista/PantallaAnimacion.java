@@ -28,7 +28,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         cargarFondo();
         definirTamañoPanel();
         comprador = new Comprador(50, 375, 32, 41, 3, 8, 1, 4f);
-        cocinero = new Cocinero(400, 360, 65, 50, 3, 11);
+        cocinero = new Cocinero(600, 360, 65, 50, 3, 11);
         invPizza.cargarImagenInventario();
         
         setFocusable(true);

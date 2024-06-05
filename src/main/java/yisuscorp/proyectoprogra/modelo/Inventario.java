@@ -30,12 +30,12 @@ public class Inventario {
     }
 
     public void renderizarInventario(Graphics g, float xEntidad) {
-        System.out.println("Renderizando inventario con tamaño: " + inventarioPizzas.size()); // Debug
+        //System.out.println("Renderizando inventario con tamaño: " + inventarioPizzas.size()); // Debug
         if (inventarioPizzas.size() > 0) {
             int index = 8 - inventarioPizzas.size();
             int nuevoAnchoPizza = 70; // Ancho deseado para la pizza
             int nuevoAltoPizza = 80;  // Alto deseado para la pizza
-            g.drawImage(hojaDeAnimacion[index], (int) xEntidad, 300, nuevoAnchoPizza, nuevoAltoPizza, null);
+            g.drawImage(hojaDeAnimacion[index], (int) xEntidad, 320, nuevoAnchoPizza, nuevoAltoPizza, null);
         }
     }
 
@@ -48,9 +48,9 @@ public class Inventario {
             for (int x = 0; x < hojaDeAnimacion.length; x++) {
                 hojaDeAnimacion[x] = img.getSubimage(x * 107, 0, 107, img.getHeight());
                 // Imprime las dimensiones y el contenido de la imagen para depuración
-                System.out.println("Imagen " + x + ": Ancho=" + hojaDeAnimacion[x].getWidth() + ", Alto=" + hojaDeAnimacion[x].getHeight());
+                //System.out.println("Imagen " + x + ": Ancho=" + hojaDeAnimacion[x].getWidth() + ", Alto=" + hojaDeAnimacion[x].getHeight());
             }
-            System.out.println("Imagenes de inventario cargadas correctamente"); // Debug
+            //System.out.println("Imagenes de inventario cargadas correctamente"); // Debug
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,6 +67,9 @@ public class Inventario {
     public Pizza pop() {
         return inventarioPizzas.pop();
     }
+    public Pizza peek (){
+        return inventarioPizzas.peek();
+    }
 
     public boolean hayEspacioParaPizza() {
         return inventarioPizzas.size() < tamañoInventario;
@@ -75,5 +78,7 @@ public class Inventario {
     public boolean isEmpty() {
         return inventarioPizzas.isEmpty();
     }
+    
+    
 }
 

@@ -9,8 +9,10 @@ package yisuscorp.proyectoprogra.modelo;
  * @author jesus
  */
 import yisuscorp.proyectoprogra.modelo.Entidad;
+import yisuscorp.proyectoprogra.vista.PantallaAnimacion;
 import static yisuscorp.proyectoprogra.modelo.Constantes.constantesComprador;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class Comprador extends Entidad {
+    // Variables de instancia
     private String nombre;
     private float velocidadMovimiento;
     private int xVolteado = 0;
@@ -32,16 +35,28 @@ public class Comprador extends Entidad {
     private int velocidadAnimacion = 9;
     private int indiceAnimacion;
     private int accionActual = constantesComprador.INACTIVO;
+    private float x, y;
+    private int width, height;
+    private Inventario inventarioPizzas;
+    private int ticksParaPagar = 0;
+    private int ticksParaConsumir = 0;
+    private int dineros;
     
     final int anchoHoja = 32 * 2;
     final int alturaHoja = 41 * 2;
 
+    // Constructor
     public Comprador(float x, float y, int w, int h, int filas, int columnas, int tipoCar, float floatVel) {
         super(x, y, w * 4, h * 4);
+        this.x = x;
+        this.y = y;
+        this.width = w * 4;
+        this.height = h * 4;
         tipo = tipoCar;
         cargarAnimaciones(filas, columnas, w, h);
         velocidadMovimiento = floatVel;
         velocidad = velocidadMovimiento;
+        this.inventarioPizzas = new Inventario(1);
 
         // Inicialización del estado de las entradas
         estadoDeEntradas.put(KeyEvent.VK_W, false);
@@ -50,18 +65,63 @@ public class Comprador extends Entidad {
         estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 
-    public void logicaComprador() {
+    // Método principal para la lógica del comprador
+    public void logicaComprador(Rectangle inventarioBounds) {
         actualizarPosicion();
         actualizarHitbox();
         checarMovimientosPlayer();
         actualizarFrameAnimacion();
         setAccionActual();
+        if (colisionaConInventario(inventarioBounds)) {
+            System.out.println("Collision");
+            if (inventarioPizzas.hayEspacioParaPizza()) {
+                comprarProducto();    
+            }
+        }
+        if (!inventarioPizzas.isEmpty()) {
+            consumir();    
+        }
+    }
+    
+    // Método para obtener el área de colisión del comprador
+    public Rectangle getBounds() {
+        return new Rectangle((int)x, (int)y, width, height);
     }
 
+    // Método para detectar colisión con el inventario
+    public boolean colisionaConInventario(Rectangle inventarioBounds) {
+        return this.getBounds().intersects(inventarioBounds);
+    }
+    
+    // Lógica para comprar producto
+    public void comprarProducto() {
+        ticksParaPagar++;
+        if (ticksParaPagar == 40) {
+            if (PantallaAnimacion.getInvPizza().isEmpty() == false) {
+                inventarioPizzas.push(PantallaAnimacion.getInvPizza().getInventarioPizzas().pop());    
+            }
+            ticksParaPagar = 0;            
+        }
+    }
+
+    // Lógica para consumir producto
+    public void consumir() {
+        ticksParaConsumir++;
+        inventarioPizzas.peek().cantidadDeUso--;
+        if (ticksParaConsumir == 50) {
+            if (inventarioPizzas.peek().cantidadDeUso <= 0) {
+                inventarioPizzas.getInventarioPizzas().pop();
+            }
+            ticksParaConsumir = 0;
+        }
+    }
+    
+    // Actualiza la posición del comprador
     private void actualizarPosicion() {
         estaMoviendose = false;
     }
 
+    // Verifica los movimientos del jugador
     private void checarMovimientosPlayer() {
         if (estadoDeEntradas.get(KeyEvent.VK_A) && !estadoDeEntradas.get(KeyEvent.VK_D)) {
             xVolteado = ancho;
@@ -76,11 +136,13 @@ public class Comprador extends Entidad {
         }
     }
 
+    // Reinicia el movimiento
     public void resetearMovimiento() {
         estadoDeEntradas.replace(KeyEvent.VK_A, false);
         estadoDeEntradas.replace(KeyEvent.VK_D, false);
     }
 
+    // Actualiza la animación
     private void actualizarFrameAnimacion() {
         tickAnimacion++;
         if (!estaMoviendose) {
@@ -100,11 +162,14 @@ public class Comprador extends Entidad {
         }
     }
 
+    // Renderiza al comprador en pantalla
     public void renderizarComprador(Graphics g) {
         g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y,
                 anchoHoja * anchoVolteado, alturaHoja, null);
+        inventarioPizzas.renderizarInventario(g,x);
     }
 
+    // Establece la acción actual del comprador
     private void setAccionActual() {
         int animacionInicio = accionActual;
         if (estaMoviendose) {
@@ -121,6 +186,7 @@ public class Comprador extends Entidad {
         }
     }
 
+    // Reinicia la animación del comprador
     private void resetearAnimacion() {
         tickAnimacion = 0;
         indiceAnimacion = 0;

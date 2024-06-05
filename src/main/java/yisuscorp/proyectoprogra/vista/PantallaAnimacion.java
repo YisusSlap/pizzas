@@ -6,9 +6,9 @@ package yisuscorp.proyectoprogra.vista;
 
 import yisuscorp.proyectoprogra.controlador.EntradasDeTeclado;
 import yisuscorp.proyectoprogra.modelo.Cocinero;
-import yisuscorp.proyectoprogra.modelo.Pizza;
 import yisuscorp.proyectoprogra.modelo.Comprador;
 import yisuscorp.proyectoprogra.modelo.Inventario;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,8 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     public PantallaAnimacion() {
         cargarFondo();
         definirTamañoPanel();
-        comprador = new Comprador(50, 375, 32, 41, 3, 8, 1, 4f);
+        // Posiciona el comprador cerca de la parte inferior de la ventana
+        comprador = new Comprador(50, ALTURA_VENTANA - 160, 32, 41, 3, 8, 1, 4f);
         cocinero = new Cocinero(600, 360, 65, 50, 3, 11);
         invPizza.cargarImagenInventario();
         
@@ -57,7 +58,8 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     }
 
     public void logicaPantalla() {
-        comprador.logicaComprador();
+        Rectangle inventarioBounds = new Rectangle(600, 320, 500, 200);
+        comprador.logicaComprador(inventarioBounds);
         cocinero.logicaCocinero();
     }
 
@@ -70,7 +72,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         comprador.renderizarComprador(g);
         cocinero.renderizarCocinero(g);
         // Dibuja el inventario
-        invPizza.renderizarInventario(g, 600); // Usa comprador.getX() para obtener la coordenada x del Comprador
+        invPizza.renderizarInventario(g, 600); // Usa una coordenada x fija para el inventario
     }
 
     @Override

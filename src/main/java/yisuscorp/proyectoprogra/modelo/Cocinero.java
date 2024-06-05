@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 
 public class Cocinero extends Entidad {
     // Variables de instancia
-    private int velocidadMovimiento = 2;
+    
     private Inventario inventarioPizzas;
     private int numeroOrden = 0;
     private int tickCocinar = 0;
@@ -28,12 +28,11 @@ public class Cocinero extends Entidad {
     private int indiceAnimacion;
     private final int velocidadAnimacion = 10;
     private int accionActual = constantesCocinero.INACTIVO;
-    private boolean estaMoviendose = false;
-    private boolean corriendo = false;
     private final int anchoHoja = 65 * 2;
     private final int alturaHoja = 50 * 2;
     private int xVolteado = ancho;
     private int anchoVolteado = -1;
+    private int pizzasElaboradas = 0;
 
     // Constructor
     public Cocinero(float x, float y, int w, int h, int filas, int columnas) {
@@ -75,7 +74,19 @@ public class Cocinero extends Entidad {
             numeroOrden++;
             String fecha = String.valueOf(Instant.now());
             tickCocinar = 0;
+            
+            incrementarPizzasElaboradas();
         }
+    }
+    
+    // Método para incrementar el contador de pizzas elaboradas
+    public void incrementarPizzasElaboradas() {
+        pizzasElaboradas++;
+    }
+
+    // Método para obtener el contador de pizzas elaboradas
+    public int getPizzasElaboradas() {
+        return pizzasElaboradas;
     }
 
     // Método para renderizar el cocinero en pantalla

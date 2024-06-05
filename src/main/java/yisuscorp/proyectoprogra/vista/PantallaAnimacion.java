@@ -28,7 +28,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         cargarFondo();
         definirTamañoPanel();
         // Posiciona el comprador cerca de la parte inferior de la ventana
-        comprador = new Comprador(50, ALTURA_VENTANA - 160, 32, 41, 3, 8, 1, 4f);
+        comprador = new Comprador(50, ALTURA_VENTANA - 160, 32, 41, 3, 8, 4f);
         cocinero = new Cocinero(600, 360, 65, 50, 3, 11);
         invPizza.cargarImagenInventario();
         
@@ -46,6 +46,10 @@ public class PantallaAnimacion extends JPanel implements Runnable {
 
     public static Comprador getComprador() {
         return comprador;
+    }
+    
+    public static Cocinero getCocinero(){
+        return cocinero;
     }
     
     public static Inventario getInvPizza(){

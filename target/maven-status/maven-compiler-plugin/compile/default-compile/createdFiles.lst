@@ -6,6 +6,8 @@ yisuscorp\proyectoprogra\modelo\Inventario.class
 yisuscorp\proyectoprogra\modelo\Cocinero.class
 yisuscorp\proyectoprogra\modelo\Pizza.class
 yisuscorp\proyectoprogra\vista\Ventana.class
+yisuscorp\proyectoprogra\controlador\PizzaDAO.class
+yisuscorp\proyectoprogra\vista\Ventana$1.class
 yisuscorp\proyectoprogra\SpriteSheet.class
 yisuscorp\proyectoprogra\modelo\Constantes$constantesComprador.class
 yisuscorp\proyectoprogra\ProyectoProgra.class

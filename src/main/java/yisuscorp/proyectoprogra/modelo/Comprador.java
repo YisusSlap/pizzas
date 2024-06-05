@@ -22,14 +22,12 @@ import javax.imageio.ImageIO;
 
 public class Comprador extends Entidad {
     // Variables de instancia
-    private String nombre;
     private float velocidadMovimiento;
     private int xVolteado = 0;
     private int anchoVolteado = 1;
     private BufferedImage[][] hojaDeAnimacion;
     public HashMap<Integer, Boolean> estadoDeEntradas = new HashMap<>();
     private float velocidad;
-    private int tipo = 1;
     private boolean estaMoviendose = false, corriendo = false;
     private int tickAnimacion;
     private int velocidadAnimacion = 9;
@@ -40,28 +38,25 @@ public class Comprador extends Entidad {
     private Inventario inventarioPizzas;
     private int ticksParaPagar = 0;
     private int ticksParaConsumir = 0;
-    private int dineros;
+    private int pizzasConsumidas = 0; // Contador para las pizzas consumidas
     
     final int anchoHoja = 32 * 2;
     final int alturaHoja = 41 * 2;
 
     // Constructor
-    public Comprador(float x, float y, int w, int h, int filas, int columnas, int tipoCar, float floatVel) {
+    public Comprador(float x, float y, int w, int h, int filas, int columnas, float floatVel) {
         super(x, y, w * 4, h * 4);
         this.x = x;
         this.y = y;
         this.width = w * 4;
         this.height = h * 4;
-        tipo = tipoCar;
         cargarAnimaciones(filas, columnas, w, h);
         velocidadMovimiento = floatVel;
         velocidad = velocidadMovimiento;
         this.inventarioPizzas = new Inventario(1);
 
         // Inicialización del estado de las entradas
-        estadoDeEntradas.put(KeyEvent.VK_W, false);
         estadoDeEntradas.put(KeyEvent.VK_A, false);
-        estadoDeEntradas.put(KeyEvent.VK_S, false);
         estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 
@@ -73,7 +68,7 @@ public class Comprador extends Entidad {
         actualizarFrameAnimacion();
         setAccionActual();
         if (colisionaConInventario(inventarioBounds)) {
-            System.out.println("Collision");
+            //System.out.println("Collision");
             if (inventarioPizzas.hayEspacioParaPizza()) {
                 comprarProducto();    
             }
@@ -111,6 +106,8 @@ public class Comprador extends Entidad {
         if (ticksParaConsumir == 50) {
             if (inventarioPizzas.peek().cantidadDeUso <= 0) {
                 inventarioPizzas.getInventarioPizzas().pop();
+                incrementarPizzasConsumidas();
+                System.out.println(getPizzasConsumidas());
             }
             ticksParaConsumir = 0;
         }
@@ -190,6 +187,15 @@ public class Comprador extends Entidad {
     private void resetearAnimacion() {
         tickAnimacion = 0;
         indiceAnimacion = 0;
+    }
+    
+    public void incrementarPizzasConsumidas() {
+        pizzasConsumidas++;
+    }
+
+    // Método para obtener el contador de pizzas consumidas
+    public int getPizzasConsumidas() {
+        return pizzasConsumidas;
     }
 
     public void cargarAnimaciones(int filas, int columnas, int anchoMarco, int altoMarco) {

@@ -1,6 +1,8 @@
 yisuscorp\proyectoprogra\modelo\Entidad.class
 yisuscorp\proyectoprogra\modelo\Constantes.class
 yisuscorp\proyectoprogra\modelo\Comprador.class
+yisuscorp\proyectoprogra\modelo\Inventario.class
+yisuscorp\proyectoprogra\modelo\Pizza.class
 yisuscorp\proyectoprogra\vista\Ventana.class
 yisuscorp\proyectoprogra\SpriteSheet.class
 yisuscorp\proyectoprogra\modelo\Constantes$constantesComprador.class

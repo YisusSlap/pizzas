@@ -13,8 +13,8 @@ import static yisuscorp.proyectoprogra.modelo.Constantes.constantesComprador;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 
@@ -27,15 +27,14 @@ public class Comprador extends Entidad {
     public HashMap<Integer, Boolean> estadoDeEntradas = new HashMap<>();
     private float velocidad;
     private int tipo = 1;
-    private boolean estaMoviendose = false, corriendo=false;
+    private boolean estaMoviendose = false, corriendo = false;
     private int tickAnimacion;
-    private int velocidadAnimacion = 37;
+    private int velocidadAnimacion = 10;
     private int indiceAnimacion;
     private int accionActual = constantesComprador.INACTIVO;
     
-    final int anchoHoja=32*2;
-    final int alturaHoja=41*2;
-    
+    final int anchoHoja = 32 * 2;
+    final int alturaHoja = 41 * 2;
 
     public Comprador(float x, float y, int w, int h, int filas, int columnas, int tipoCar, float floatVel) {
         super(x, y, w * 4, h * 4);
@@ -43,15 +42,20 @@ public class Comprador extends Entidad {
         cargarAnimaciones(filas, columnas, w, h);
         velocidadMovimiento = floatVel;
         velocidad = velocidadMovimiento;
+
+        // Inicialización del estado de las entradas
+        estadoDeEntradas.put(KeyEvent.VK_W, false);
+        estadoDeEntradas.put(KeyEvent.VK_A, false);
+        estadoDeEntradas.put(KeyEvent.VK_S, false);
+        estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 
     public void logicaComprador() {
         actualizarPosicion();
         actualizarHitbox();
-        
         checarMovimientosPlayer();
-        
         actualizarFrameAnimacion();
+        setAccionActual();
     }
 
     private void actualizarPosicion() {
@@ -59,8 +63,6 @@ public class Comprador extends Entidad {
     }
 
     private void checarMovimientosPlayer() {
-        if (!estadoDeEntradas.get(KeyEvent.VK_D) && !estadoDeEntradas.get(KeyEvent.VK_A))
-            return;
         if (estadoDeEntradas.get(KeyEvent.VK_A) && !estadoDeEntradas.get(KeyEvent.VK_D)) {
             xVolteado = ancho;
             anchoVolteado = -1;
@@ -73,7 +75,6 @@ public class Comprador extends Entidad {
             estaMoviendose = true;
         }
     }
-
 
     public void resetearMovimiento() {
         estadoDeEntradas.replace(KeyEvent.VK_A, false);
@@ -94,9 +95,7 @@ public class Comprador extends Entidad {
                 if (estaMoviendose && !corriendo) {
                     corriendo = true;
                     velocidadMovimiento = velocidad;
-
                 }
-
             }
         }
     }
@@ -104,7 +103,6 @@ public class Comprador extends Entidad {
     public void renderizarComprador(Graphics g) {
         g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y,
                 anchoHoja * anchoVolteado, alturaHoja, null);
-        
     }
 
     private void setAccionActual() {
@@ -129,17 +127,19 @@ public class Comprador extends Entidad {
     }
 
     public void cargarAnimaciones(int filas, int columnas, int anchoMarco, int altoMarco) {
-        try{
+        try {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/Comprador2.png"));
-        hojaDeAnimacion = new BufferedImage[filas][columnas];
-        for (int y = 0; y < hojaDeAnimacion.length; y++) {
-            for (int x = 0; x < hojaDeAnimacion[y].length; x++) {
-                hojaDeAnimacion[y][x] = img.getSubimage(x * anchoMarco, y * altoMarco, anchoMarco, altoMarco);
+            hojaDeAnimacion = new BufferedImage[filas][columnas];
+            for (int y = 0; y < filas; y++) {
+                for (int x = 0; x < columnas; x++) {
+                    hojaDeAnimacion[y][x] = img.getSubimage(x * anchoMarco, y * altoMarco, anchoMarco, altoMarco);
+                }
             }
-        }
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (RasterFormatException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar subimágenes. Verifique las dimensiones de la imagen.");
         }
-        
     }
 }

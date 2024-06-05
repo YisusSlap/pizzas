@@ -6,6 +6,7 @@ package yisuscorp.proyectoprogra.vista;
 
 import yisuscorp.proyectoprogra.controlador.EntradasDeTeclado;
 import yisuscorp.proyectoprogra.modelo.Comprador;
+import yisuscorp.proyectoprogra.modelo.Inventario;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -18,12 +19,15 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     private static final int ANCHURA_VENTANA = 1000;
     private static final int ALTURA_VENTANA = 532;
     private static Comprador comprador;
+    private Inventario invPizza = new Inventario(8);
 
     public PantallaAnimacion() {
         cargarFondo();
         definirTamañoPanel();
-        comprador = new Comprador(100, 375, 32, 41, 3, 8,1,1.31f);
+        comprador = new Comprador(100, 375, 32, 41, 3, 8, 1, 4f);
+        invPizza.cargarImagenInventario();
         setFocusable(true);
+        addKeyListener(new EntradasDeTeclado(this));
     }
 
     private void cargarFondo() {
@@ -43,7 +47,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         setPreferredSize(size);
     }
 
-    public void logicaPantalla(){
+    public void logicaPantalla() {
         comprador.logicaComprador();
     }
 
@@ -51,9 +55,11 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Dibuja el fondo
-        g.drawImage(fondo, 0,0, ANCHURA_VENTANA, ALTURA_VENTANA, this);
+        g.drawImage(fondo, 0, 0, ANCHURA_VENTANA, ALTURA_VENTANA, this);
         // Dibuja otros elementos, como el comprador
         comprador.renderizarComprador(g);
+        // Dibuja el inventario
+        invPizza.renderizarInventario(g, 120);  // Asegúrate de usar getX() para obtener la coordenada x del Comprador
     }
 
     @Override

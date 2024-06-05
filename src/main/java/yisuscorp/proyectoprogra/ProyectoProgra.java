@@ -16,5 +16,8 @@ public class ProyectoProgra {
     public static void main(String[] args) {
         PantallaAnimacion pantalla = new PantallaAnimacion();
         Ventana ventana = new Ventana(pantalla);
+        Thread hilo = new Thread(pantalla);
+        hilo.start();
     }
 }
+

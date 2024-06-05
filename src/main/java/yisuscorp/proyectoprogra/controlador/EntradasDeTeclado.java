@@ -14,90 +14,38 @@ import java.awt.event.KeyEvent;
 import yisuscorp.proyectoprogra.modelo.Comprador;
 import yisuscorp.proyectoprogra.vista.PantallaAnimacion;
 
-public class EntradasDeTeclado implements KeyListener{
+public class EntradasDeTeclado implements KeyListener {
     private PantallaAnimacion pantallaDeJuego;
-    //public HashMap<Integer,Boolean> estadoDeEntradas =new HashMap<>();
-    
-    
-    public EntradasDeTeclado(PantallaAnimacion pantallaDeJuego){
-        this.pantallaDeJuego=pantallaDeJuego;
-        //this.estadoDeEntradas.put(KeyEvent.VK_W, false);
-        //this.estadoDeEntradas.put(KeyEvent.VK_A, false);
-        //this.estadoDeEntradas.put(KeyEvent.VK_S, false);
-        //this.estadoDeEntradas.put(KeyEvent.VK_D, false);
-    }
-    public EntradasDeTeclado(Comprador comprador){
-        
-        PantallaAnimacion.getComprador().estadoDeEntradas.put(KeyEvent.VK_W, false);
-        PantallaAnimacion.getComprador().estadoDeEntradas.put(KeyEvent.VK_A, false);
-        PantallaAnimacion.getComprador().estadoDeEntradas.put(KeyEvent.VK_S, false);
-        PantallaAnimacion.getComprador().estadoDeEntradas.put(KeyEvent.VK_D, false);
+
+    public EntradasDeTeclado(PantallaAnimacion pantallaDeJuego) {
+        this.pantallaDeJuego = pantallaDeJuego;
+        Comprador comprador = PantallaAnimacion.getComprador();
+        comprador.estadoDeEntradas.put(KeyEvent.VK_W, false);
+        comprador.estadoDeEntradas.put(KeyEvent.VK_A, false);
+        comprador.estadoDeEntradas.put(KeyEvent.VK_S, false);
+        comprador.estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 
-    /*public EntradasDeTeclado(Cocinero cocinero){
-        
-        PantallaAnimacion.getCocinero().estadoDeEntradas.put(KeyEvent.VK_UP, false);
-        PantallaAnimacion.getCocinero().estadoDeEntradas.put(KeyEvent.VK_LEFT, false);
-        PantallaAnimacion.getCocinero().estadoDeEntradas.put(KeyEvent.VK_DOWN, false);
-        PantallaAnimacion.getCocinero().estadoDeEntradas.put(KeyEvent.VK_RIGHT, false);
-    }*/
-
-    public void addConfiguration(Integer input){
-
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // No se necesita implementar
     }
-    
-        @Override
-        public void keyTyped(KeyEvent e) {
-        
-            
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        Comprador comprador = PantallaAnimacion.getComprador();
+        if (comprador.estadoDeEntradas.containsKey(keyCode)) {
+            comprador.estadoDeEntradas.replace(keyCode, true);
         }
+    }
 
-        @Override
-        public void keyPressed(KeyEvent e) {
-            
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_W:
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_W,true );
-                
-               
-                break;
-                case KeyEvent.VK_A:
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_A,true ); 
-                
-                
-                break;
-                case KeyEvent.VK_S:
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_S,true ); 
-                break;
-
-                case KeyEvent.VK_D:
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_D,true ); 
-                break;
-                
-            }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        Comprador comprador = PantallaAnimacion.getComprador();
+        if (comprador.estadoDeEntradas.containsKey(keyCode)) {
+            comprador.estadoDeEntradas.replace(keyCode, false);
         }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            
-            if (e.getKeyCode()==KeyEvent.VK_W) {
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_W,false );    
-            }
-            if(e.getKeyCode()==KeyEvent.VK_A){
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_A,false );
-            }
-            if(e.getKeyCode()==KeyEvent.VK_S){
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_S,false );  
-            }
-            if(e.getKeyCode()==KeyEvent.VK_D){
-                PantallaAnimacion.getComprador().estadoDeEntradas.replace(KeyEvent.VK_D,false );          
-            }
-
-            
-            
-        }
-
-
-    
-    
+    }
 }

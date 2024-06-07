@@ -36,7 +36,7 @@ public class Ventana extends JFrame {
     private void guardarDatos() {
         // Genera un número de sesión aleatorio entre 100 y 999
         //Random random = new Random();
-        //int numeroSesion = random.nextInt(900) + 100;
+        //ddddddddint numeroSesion = random.nextInt(900) + 100;
         
         // Guarda la cantidad de pizzas producidas y consumidas, junto con el número de sesión
         TacosDAO pizzaDAO = TacosDAO.getInstance();

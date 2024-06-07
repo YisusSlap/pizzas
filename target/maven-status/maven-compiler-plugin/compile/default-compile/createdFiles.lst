@@ -1,4 +1,5 @@
 yisuscorp\proyectoprogra\modelo\Entidad.class
+yisuscorp\proyectoprogra\controlador\BotonCRUD.class
 yisuscorp\proyectoprogra\modelo\Constantes$constantesCocinero.class
 yisuscorp\proyectoprogra\modelo\Constantes.class
 yisuscorp\proyectoprogra\modelo\Comprador.class
@@ -6,9 +7,11 @@ yisuscorp\proyectoprogra\modelo\Inventario.class
 yisuscorp\proyectoprogra\modelo\Cocinero.class
 yisuscorp\proyectoprogra\vista\Ventana.class
 yisuscorp\proyectoprogra\vista\Ventana$1.class
+yisuscorp\proyectoprogra\vista\MenuPrincipal.class
 yisuscorp\proyectoprogra\modelo\Constantes$constantesComprador.class
 yisuscorp\proyectoprogra\ProyectoProgra.class
 yisuscorp\proyectoprogra\vista\PantallaAnimacion.class
+yisuscorp\proyectoprogra\controlador\BotonAnimacion.class
 yisuscorp\proyectoprogra\controlador\EntradasDeTeclado.class
 yisuscorp\proyectoprogra\vista\Animation.class
 yisuscorp\proyectoprogra\modelo\Taco.class

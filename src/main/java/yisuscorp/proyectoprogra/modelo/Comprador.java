@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 
-public class Comprador extends Entidad {
-    // Variables de instancia
+public class Comprador extends Entidad implements Runnable {
     private float velocidadMovimiento;
     private int xVolteado = 0;
     private int anchoVolteado = 1;
@@ -30,7 +29,7 @@ public class Comprador extends Entidad {
     private float velocidad;
     private boolean estaMoviendose = false, corriendo = false;
     private int tickAnimacion;
-    private final int  velocidadAnimacion = 9;
+    private final int velocidadAnimacion = 9;
     private int indiceAnimacion;
     private int accionActual = constantesComprador.INACTIVO;
     private float x, y;
@@ -38,68 +37,76 @@ public class Comprador extends Entidad {
     private Inventario inventarioTacos;
     private int ticksParaPagar = 0;
     private int ticksParaConsumir = 0;
-    private int tacosConsumidos = 0; // Contador para las pizzas consumidas
-    
+    private int tacosConsumidos = 0;
+
     final int anchoHoja = 32 * 2;
     final int alturaHoja = 41 * 2;
 
-    // Constructor
     public Comprador(float x, float y, int w, int h, int filas, int columnas, float floatVel) {
         super(x, y, w * 4, h * 4);
         this.x = x;
         this.y = y;
-        this.width = w * 4;
-        this.height = h * 4;
+        this.width = w * 3;
+        this.height = h * 3;
         cargarAnimaciones(filas, columnas, w, h);
         velocidadMovimiento = floatVel;
         velocidad = velocidadMovimiento;
         this.inventarioTacos = new Inventario(1);
 
-        // Inicialización del estado de las entradas
         estadoDeEntradas.put(KeyEvent.VK_A, false);
         estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 
-    // Método principal para la lógica del comprador
+    @Override
+    public void run() {
+        while (true) {
+            logicaComprador(new Rectangle(650, 320, 500, 200));
+            try {
+                Thread.sleep(1000 / 60);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void logicaComprador(Rectangle inventarioBounds) {
         actualizarPosicion();
         actualizarHitbox();
         checarMovimientosPlayer();
         actualizarFrameAnimacion();
         setAccionActual();
-        if (colisionaConInventario(inventarioBounds)) {
-            //System.out.println("Collision");
-            if (inventarioTacos.hayEspacioParaPizza()) {
-                comprarProducto();    
+        synchronized (PantallaAnimacion.getInvTacos()) {
+            if (colisionaConInventario(inventarioBounds)) {
+                if (inventarioTacos.hayEspacioParaTacos()) {
+                    comprarProducto();
+                }
+            }
+            if (!inventarioTacos.isEmpty()) {
+                consumir();
             }
         }
-        if (!inventarioTacos.isEmpty()) {
-            consumir();    
-        }
-    }
-    
-    // Método para obtener el área de colisión del comprador
-    public Rectangle getBounds() {
-        return new Rectangle((int)x, (int)y, width, height);
     }
 
-    // Método para detectar colisión con el inventario
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, width, height);
+    }
+
     public boolean colisionaConInventario(Rectangle inventarioBounds) {
         return this.getBounds().intersects(inventarioBounds);
     }
-    
-    // Lógica para comprar producto
+
     public void comprarProducto() {
         ticksParaPagar++;
-        if (ticksParaPagar == 40) {
-            if (PantallaAnimacion.getInvPizza().isEmpty() == false) {
-                inventarioTacos.push(PantallaAnimacion.getInvPizza().getInventarioTacos().pop());    
+        if (ticksParaPagar == 30) {
+            synchronized (PantallaAnimacion.getInvTacos()) {
+                if (!PantallaAnimacion.getInvTacos().isEmpty()) {
+                    inventarioTacos.push(PantallaAnimacion.getInvTacos().getInventarioTacos().pop());
+                }
             }
-            ticksParaPagar = 0;            
+            ticksParaPagar = 0;
         }
     }
 
-    // Lógica para consumir producto
     public void consumir() {
         ticksParaConsumir++;
         inventarioTacos.peek().cantidadDeUso--;
@@ -112,13 +119,11 @@ public class Comprador extends Entidad {
             ticksParaConsumir = 0;
         }
     }
-    
-    // Actualiza la posición del comprador
+
     private void actualizarPosicion() {
         estaMoviendose = false;
     }
 
-    // Verifica los movimientos del jugador
     private void checarMovimientosPlayer() {
         if (estadoDeEntradas.get(KeyEvent.VK_A) && !estadoDeEntradas.get(KeyEvent.VK_D)) {
             xVolteado = ancho;
@@ -133,13 +138,11 @@ public class Comprador extends Entidad {
         }
     }
 
-    // Reinicia el movimiento
     public void resetearMovimiento() {
         estadoDeEntradas.replace(KeyEvent.VK_A, false);
         estadoDeEntradas.replace(KeyEvent.VK_D, false);
     }
 
-    // Actualiza la animación
     private void actualizarFrameAnimacion() {
         tickAnimacion++;
         if (!estaMoviendose) {
@@ -159,14 +162,11 @@ public class Comprador extends Entidad {
         }
     }
 
-    // Renderiza al comprador en pantalla
     public void renderizarComprador(Graphics g) {
-        g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y,
-                anchoHoja * anchoVolteado, alturaHoja, null);
-        inventarioTacos.renderizarInventario(g,x);
+        g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y, anchoHoja * anchoVolteado, alturaHoja, null);
+        inventarioTacos.renderizarInventario(g, x);
     }
 
-    // Establece la acción actual del comprador
     private void setAccionActual() {
         int animacionInicio = accionActual;
         if (estaMoviendose) {
@@ -183,17 +183,15 @@ public class Comprador extends Entidad {
         }
     }
 
-    // Reinicia la animación del comprador
     private void resetearAnimacion() {
         tickAnimacion = 0;
         indiceAnimacion = 0;
     }
-    
+
     public void incrementarTacosConsumidos() {
         tacosConsumidos++;
     }
 
-    // Método para obtener el contador de pizzas consumidas
     public int getTacosConsumidos() {
         return tacosConsumidos;
     }

@@ -4,91 +4,68 @@
  */
 package yisuscorp.proyectoprogra.vista;
 
-import yisuscorp.proyectoprogra.controlador.EntradasDeTeclado;
-import yisuscorp.proyectoprogra.modelo.Cocinero;
 import yisuscorp.proyectoprogra.modelo.Comprador;
+import yisuscorp.proyectoprogra.modelo.Cocinero;
 import yisuscorp.proyectoprogra.modelo.Inventario;
-
-import javax.swing.*;
-import java.awt.*;
+import yisuscorp.proyectoprogra.controlador.EntradasDeTeclado;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import javax.imageio.ImageIO;
+import java.io.IOException;
+import javax.swing.JPanel;
 
 public class PantallaAnimacion extends JPanel implements Runnable {
-    private BufferedImage fondo;
-    private static final int ANCHURA_VENTANA = 1000;
-    private static final int ALTURA_VENTANA = 532;
     private static Comprador comprador;
-    private static Inventario invTaco = new Inventario(8);
     private static Cocinero cocinero;
+    private BufferedImage fondo;
+    private static Inventario invTaco = new Inventario(8);
 
     public PantallaAnimacion() {
-        cargarFondo();
-        definirTamañoPanel();
-        // Posiciona el comprador cerca de la parte inferior de la ventana
-        comprador = new Comprador(50, ALTURA_VENTANA - 160, 32, 41, 3, 8, 4f);
-        cocinero = new Cocinero(600, 360, 65, 50, 3, 11);
-        invTaco.cargarImagenInventario();
-        
-        setFocusable(true);
-        addKeyListener(new EntradasDeTeclado(this));
-    }
-
-    private void cargarFondo() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/fondocafe.png")) {
-            fondo = ImageIO.read(inputStream);
+        comprador = new Comprador(50, 340, 32, 41, 3, 8, 4f);
+        cocinero = new Cocinero(600, 340, 65, 50, 3, 11);
+        try {
+            fondo = ImageIO.read(getClass().getResourceAsStream("/fondocafe.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        new Thread(comprador).start();
+        new Thread(cocinero).start();
+        setFocusable(true);
+        addKeyListener(new EntradasDeTeclado(this));
     }
 
     public static Comprador getComprador() {
         return comprador;
     }
-    
-    public static Cocinero getCocinero(){
+
+    public static Cocinero getCocinero() {
         return cocinero;
     }
     
-    public static Inventario getInvPizza(){
+    public static Inventario getInvTacos(){
         return invTaco;
-    }
-
-    private void definirTamañoPanel() {
-        Dimension size = new Dimension(ANCHURA_VENTANA, ALTURA_VENTANA);
-        setPreferredSize(size);
-    }
-
-    public void logicaPantalla() {
-        Rectangle inventarioBounds = new Rectangle(600, 320, 500, 200);
-        comprador.logicaComprador(inventarioBounds);
-        cocinero.logicaCocinero();
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        // Dibuja el fondo
-        g.drawImage(fondo, 0, 0, ANCHURA_VENTANA, ALTURA_VENTANA, this);
-        // Dibuja otros elementos, como el comprador
-        comprador.renderizarComprador(g);
-        cocinero.renderizarCocinero(g);
-        // Dibuja el inventario
-        invTaco.renderizarInventario(g, 600); // Usa una coordenada x fija para el inventario
-    }
+    } 
+    
 
     @Override
     public void run() {
         while (true) {
-            logicaPantalla();
             repaint();
             try {
-                Thread.sleep(1000 / 60); // Aproximadamente 60 FPS
+                Thread.sleep(1000 / 60);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondo, 0, 0, getWidth(), getHeight(), null);
+        comprador.renderizarComprador(g);
+        cocinero.renderizarCocinero(g);
+         invTaco.renderizarInventario(g, 600);
     }
 }

@@ -4,6 +4,7 @@
 
 package yisuscorp.proyectoprogra;
 
+import yisuscorp.proyectoprogra.vista.MenuPrincipal;
 import yisuscorp.proyectoprogra.vista.PantallaAnimacion;
 import yisuscorp.proyectoprogra.vista.Ventana;
 
@@ -14,10 +15,7 @@ import yisuscorp.proyectoprogra.vista.Ventana;
 public class ProyectoProgra {
 
     public static void main(String[] args) {
-        PantallaAnimacion pantalla = new PantallaAnimacion();
-        Ventana ventana = new Ventana(pantalla);
-        Thread hilo = new Thread(pantalla);
-        hilo.start();
+        MenuPrincipal menu = new MenuPrincipal();
     }
 }
 

@@ -35,7 +35,7 @@ public class Inventario {
             int index = 8 - inventarioTaco.size();
             int nuevoAnchoPizza = 70; // Ancho deseado para la pizza
             int nuevoAltoPizza = 80;  // Alto deseado para la pizza
-            g.drawImage(hojaDeAnimacion[index], (int) xEntidad, 320, nuevoAnchoPizza, nuevoAltoPizza, null);
+            g.drawImage(hojaDeAnimacion[index], (int) xEntidad, 300, nuevoAnchoPizza, nuevoAltoPizza, null);
         }
     }
 
@@ -71,7 +71,7 @@ public class Inventario {
         return inventarioTaco.peek();
     }
 
-    public boolean hayEspacioParaPizza() {
+    public boolean hayEspacioParaTacos() {
         return inventarioTaco.size() < tamañoInventario;
     }
 

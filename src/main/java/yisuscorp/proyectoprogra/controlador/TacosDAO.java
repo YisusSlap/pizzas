@@ -13,6 +13,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import yisuscorp.proyectoprogra.modelo.Registro;
 
 public class TacosDAO {
     // Singleton
@@ -63,21 +66,23 @@ public class TacosDAO {
     }
 
     // Método para leer un registro específico por su número de sesión
-    public void leerRegistro(int idSesion) {
+    public List<Registro> leerRegistros() {
+        List<Registro> registros = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Tacos WHERE idSesion = ?");
-            statement.setInt(1, idSesion);
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Tacos");
             ResultSet result = statement.executeQuery();
             while (result.next()) {
+                int idSesion = result.getInt("idSesion");
                 int tacosProducidos = result.getInt("tacos_producidos");
                 int tacosConsumidos = result.getInt("tacos_consumidos");
-                System.out.println("ID: " + idSesion + ", Pizzas Producidas: " + tacosProducidos + ", Pizzas Consumidas: " + tacosConsumidos);
+                registros.add(new Registro(idSesion, tacosProducidos, tacosConsumidos));
             }
             result.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return registros;
     }
 
     // Método para actualizar un registro específico por su número de sesión

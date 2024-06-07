@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 public class Cocinero extends Entidad {
     // Variables de instancia
     
-    private Inventario inventarioPizzas;
+    private Inventario inventarioTaco;
     private int numeroOrden = 0;
     private int tickCocinar = 0;
     private BufferedImage[][] hojaDeAnimacion;
@@ -32,14 +32,14 @@ public class Cocinero extends Entidad {
     private final int alturaHoja = 50 * 2;
     private int xVolteado = ancho;
     private int anchoVolteado = -1;
-    private int pizzasElaboradas = 0;
+    private int tacosElaborados = 0;
 
     // Constructor
     public Cocinero(float x, float y, int w, int h, int filas, int columnas) {
         super(x, y, w * 4, h * 4);
-        inventarioPizzas = new Inventario(1); // Inicialización de inventario
+        inventarioTaco = new Inventario(1); // Inicialización de inventario
         cargarAnimaciones(filas, columnas, w, h);
-        inventarioPizzas.cargarImagenInventario();
+        inventarioTaco.cargarImagenInventario();
         setAccionActual(constantesCocinero.INACTIVO);
     }
 
@@ -49,7 +49,7 @@ public class Cocinero extends Entidad {
         actualizarFrameAnimacion();
 
         // Comprueba si hay espacio para cocinar una pizza
-        if (inventarioPizzas.hayEspacioParaPizza()) {
+        if (inventarioTaco.hayEspacioParaPizza()) {
             crearPizza();
             setAccionActual(constantesCocinero.COCINAR);
         } else {
@@ -57,8 +57,8 @@ public class Cocinero extends Entidad {
         }
 
         // Transfiere la pizza cocinada al inventario del juego
-        if (PantallaAnimacion.getInvPizza().hayEspacioParaPizza() && !inventarioPizzas.isEmpty()) {
-            PantallaAnimacion.getInvPizza().push(inventarioPizzas.pop());
+        if (PantallaAnimacion.getInvPizza().hayEspacioParaPizza() && !inventarioTaco.isEmpty()) {
+            PantallaAnimacion.getInvPizza().push(inventarioTaco.pop());
         }
     }
 
@@ -70,29 +70,29 @@ public class Cocinero extends Entidad {
         tickCocinar++;
 
         if (tickCocinar == 200) {
-            inventarioPizzas.push(new Pizza(0, 10, 20, 20, vidaPizza, precioPizza, numeroOrden));
+            inventarioTaco.push(new Taco(0, 10, 20, 20, vidaPizza, precioPizza, numeroOrden));
             numeroOrden++;
             String fecha = String.valueOf(Instant.now());
             tickCocinar = 0;
             
-            incrementarPizzasElaboradas();
+            incrementarTacosElaborados();
         }
     }
     
     // Método para incrementar el contador de pizzas elaboradas
-    public void incrementarPizzasElaboradas() {
-        pizzasElaboradas++;
+    public void incrementarTacosElaborados() {
+        tacosElaborados++;
     }
 
     // Método para obtener el contador de pizzas elaboradas
-    public int getPizzasElaboradas() {
-        return pizzasElaboradas;
+    public int getTacosElaborados() {
+        return tacosElaborados;
     }
 
     // Método para renderizar el cocinero en pantalla
     public void renderizarCocinero(Graphics g) {
         g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y, anchoHoja * anchoVolteado, alturaHoja, null);
-        inventarioPizzas.renderizarInventario(g, 750);
+        inventarioTaco.renderizarInventario(g, 750);
     }
 
     // Método para actualizar la animación del cocinero

@@ -14,26 +14,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PizzaDAO {
+public class TacosDAO {
     // Singleton
-    private static PizzaDAO instance;
+    private static TacosDAO instance;
     private Connection connection;
 
-    private PizzaDAO() {
+    private TacosDAO() {
         // Configura la conexión a la base de datos
         try {
-            String url = "jdbc:mysql://localhost:3306/PizzaDatabase";
-            String user = "root";
-            String password = "03Julio1979";
+            String url = "jdbc:mysql://localhost:3306/TacosDataBase";
+            String user = "taquero";
+            String password = "12345";
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static synchronized PizzaDAO getInstance() {
+    public static synchronized TacosDAO getInstance() {
         if (instance == null) {
-            instance = new PizzaDAO();
+            instance = new TacosDAO();
         }
         return instance;
     }
@@ -50,12 +50,11 @@ public class PizzaDAO {
     }
     
     // Método para crear un nuevo registro
-    public void crearRegistro(int pizzasProducidas, int pizzasConsumidas, int numeroSesion) {
+    public void crearRegistro(int tacosProducidos, int tacosConsumidos) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Pizzas (pizzas_producidas, pizzas_consumidas, numero_sesion) VALUES (?, ?, ?)");
-            statement.setInt(1, pizzasProducidas);
-            statement.setInt(2, pizzasConsumidas);
-            statement.setInt(3, numeroSesion);
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Tacos (tacos_producidos, tacos_consumidos) VALUES (?, ?)");
+            statement.setInt(1, tacosProducidos);
+            statement.setInt(2, tacosConsumidos);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -64,16 +63,15 @@ public class PizzaDAO {
     }
 
     // Método para leer un registro específico por su número de sesión
-    public void leerRegistro(int numeroSesion) {
+    public void leerRegistro(int idSesion) {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Pizzas WHERE numero_sesion = ?");
-            statement.setInt(1, numeroSesion);
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Tacos WHERE idSesion = ?");
+            statement.setInt(1, idSesion);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                int id = result.getInt("id");
-                int pizzasProducidas = result.getInt("pizzas_producidas");
-                int pizzasConsumidas = result.getInt("pizzas_consumidas");
-                System.out.println("ID: " + id + ", Pizzas Producidas: " + pizzasProducidas + ", Pizzas Consumidas: " + pizzasConsumidas);
+                int tacosProducidos = result.getInt("tacos_producidos");
+                int tacosConsumidos = result.getInt("tacos_consumidos");
+                System.out.println("ID: " + idSesion + ", Pizzas Producidas: " + tacosProducidos + ", Pizzas Consumidas: " + tacosConsumidos);
             }
             result.close();
             statement.close();
@@ -83,12 +81,12 @@ public class PizzaDAO {
     }
 
     // Método para actualizar un registro específico por su número de sesión
-    public void actualizarRegistro(int pizzasProducidas, int pizzasConsumidas, int numeroSesion) {
+    public void actualizarRegistro(int tacosProducidos, int tacosConsumidos, int idSesion) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Pizzas SET pizzas_producidas = ?, pizzas_consumidas = ? WHERE numero_sesion = ?");
-            statement.setInt(1, pizzasProducidas);
-            statement.setInt(2, pizzasConsumidas);
-            statement.setInt(3, numeroSesion);
+            PreparedStatement statement = connection.prepareStatement("UPDATE Tacos SET tacos_producidos = ?, tacos_consumidos = ? WHERE idSesion = ?");
+            statement.setInt(1, tacosProducidos);
+            statement.setInt(2, tacosConsumidos);
+            statement.setInt(3, idSesion);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -97,10 +95,10 @@ public class PizzaDAO {
     }
 
     // Método para eliminar un registro específico por su número de sesión
-    public void eliminarRegistro(int numeroSesion) {
+    public void eliminarRegistro(int idSesion) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM Pizzas WHERE numero_sesion = ?");
-            statement.setInt(1, numeroSesion);
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM Tacos WHERE idSesion = ?");
+            statement.setInt(1, idSesion);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {

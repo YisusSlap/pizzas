@@ -16,7 +16,7 @@ import java.util.Stack;
 import javax.imageio.ImageIO;
 
 public class Inventario {
-    private Stack<Pizza> inventarioPizzas = new Stack<>();
+    private Stack<Taco> inventarioTaco = new Stack<>();
     private int tamañoInventario;
     private BufferedImage[] hojaDeAnimacion;
 
@@ -31,8 +31,8 @@ public class Inventario {
 
     public void renderizarInventario(Graphics g, float xEntidad) {
         //System.out.println("Renderizando inventario con tamaño: " + inventarioPizzas.size()); // Debug
-        if (inventarioPizzas.size() > 0) {
-            int index = 8 - inventarioPizzas.size();
+        if (inventarioTaco.size() > 0) {
+            int index = 8 - inventarioTaco.size();
             int nuevoAnchoPizza = 70; // Ancho deseado para la pizza
             int nuevoAltoPizza = 80;  // Alto deseado para la pizza
             g.drawImage(hojaDeAnimacion[index], (int) xEntidad, 320, nuevoAnchoPizza, nuevoAltoPizza, null);
@@ -41,10 +41,10 @@ public class Inventario {
 
     public void cargarImagenInventario() {
         try {
-            BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/PizzaHealth.png"));
+            BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/Tacos1.png"));
             hojaDeAnimacion = new BufferedImage[9];
-            int nuevoAnchoPizza = 40; // Nuevo ancho deseado para la pizza
-            int nuevoAltoPizza = 50; // Nuevo alto deseado para la pizza
+            int nuevoAnchoTaco = 40; // Nuevo ancho deseado para la pizza
+            int nuevoAltoTaco = 50; // Nuevo alto deseado para la pizza
             for (int x = 0; x < hojaDeAnimacion.length; x++) {
                 hojaDeAnimacion[x] = img.getSubimage(x * 107, 0, 107, img.getHeight());
                 // Imprime las dimensiones y el contenido de la imagen para depuración
@@ -56,27 +56,27 @@ public class Inventario {
         }
     }
 
-    public Stack<Pizza> getInventarioPizzas() {
-        return inventarioPizzas;
+    public Stack<Taco> getInventarioTacos() {
+        return inventarioTaco;
     }
 
-    public void push(Pizza p) {
-        inventarioPizzas.push(p);
+    public void push(Taco p) {
+        inventarioTaco.push(p);
     }
 
-    public Pizza pop() {
-        return inventarioPizzas.pop();
+    public Taco pop() {
+        return inventarioTaco.pop();
     }
-    public Pizza peek (){
-        return inventarioPizzas.peek();
+    public Taco peek (){
+        return inventarioTaco.peek();
     }
 
     public boolean hayEspacioParaPizza() {
-        return inventarioPizzas.size() < tamañoInventario;
+        return inventarioTaco.size() < tamañoInventario;
     }
 
     public boolean isEmpty() {
-        return inventarioPizzas.isEmpty();
+        return inventarioTaco.isEmpty();
     }
     
     

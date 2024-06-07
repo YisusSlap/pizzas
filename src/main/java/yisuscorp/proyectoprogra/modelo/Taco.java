@@ -10,13 +10,13 @@ import java.awt.Graphics;
  *
  * @author jesus
  */
-public class Pizza extends Entidad {
+public class Taco extends Entidad {
     public int cantidadDeUso;
     public int precioPizza;
     public int numeroOrden;
     
 
-    public Pizza(float x, float y, int w, int h,int cantidadDeUso,int precioPizza,int numOrden){
+    public Taco(float x, float y, int w, int h,int cantidadDeUso,int precioPizza,int numOrden){
         super(x, y, w, h);
         this.cantidadDeUso=cantidadDeUso;
         this.precioPizza=precioPizza;

@@ -20,9 +20,7 @@ public class EntradasDeTeclado implements KeyListener {
     public EntradasDeTeclado(PantallaAnimacion pantallaDeJuego) {
         this.pantallaDeJuego = pantallaDeJuego;
         Comprador comprador = PantallaAnimacion.getComprador();
-        comprador.estadoDeEntradas.put(KeyEvent.VK_W, false);
         comprador.estadoDeEntradas.put(KeyEvent.VK_A, false);
-        comprador.estadoDeEntradas.put(KeyEvent.VK_S, false);
         comprador.estadoDeEntradas.put(KeyEvent.VK_D, false);
     }
 

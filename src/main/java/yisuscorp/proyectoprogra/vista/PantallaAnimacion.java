@@ -21,7 +21,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     private static final int ANCHURA_VENTANA = 1000;
     private static final int ALTURA_VENTANA = 532;
     private static Comprador comprador;
-    private static Inventario invPizza = new Inventario(8);
+    private static Inventario invTaco = new Inventario(8);
     private static Cocinero cocinero;
 
     public PantallaAnimacion() {
@@ -30,7 +30,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         // Posiciona el comprador cerca de la parte inferior de la ventana
         comprador = new Comprador(50, ALTURA_VENTANA - 160, 32, 41, 3, 8, 4f);
         cocinero = new Cocinero(600, 360, 65, 50, 3, 11);
-        invPizza.cargarImagenInventario();
+        invTaco.cargarImagenInventario();
         
         setFocusable(true);
         addKeyListener(new EntradasDeTeclado(this));
@@ -53,7 +53,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
     }
     
     public static Inventario getInvPizza(){
-        return invPizza;
+        return invTaco;
     }
 
     private void definirTamañoPanel() {
@@ -76,7 +76,7 @@ public class PantallaAnimacion extends JPanel implements Runnable {
         comprador.renderizarComprador(g);
         cocinero.renderizarCocinero(g);
         // Dibuja el inventario
-        invPizza.renderizarInventario(g, 600); // Usa una coordenada x fija para el inventario
+        invTaco.renderizarInventario(g, 600); // Usa una coordenada x fija para el inventario
     }
 
     @Override

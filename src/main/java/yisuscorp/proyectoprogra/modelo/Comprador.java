@@ -30,15 +30,15 @@ public class Comprador extends Entidad {
     private float velocidad;
     private boolean estaMoviendose = false, corriendo = false;
     private int tickAnimacion;
-    private int velocidadAnimacion = 9;
+    private final int  velocidadAnimacion = 9;
     private int indiceAnimacion;
     private int accionActual = constantesComprador.INACTIVO;
     private float x, y;
     private int width, height;
-    private Inventario inventarioPizzas;
+    private Inventario inventarioTacos;
     private int ticksParaPagar = 0;
     private int ticksParaConsumir = 0;
-    private int pizzasConsumidas = 0; // Contador para las pizzas consumidas
+    private int tacosConsumidos = 0; // Contador para las pizzas consumidas
     
     final int anchoHoja = 32 * 2;
     final int alturaHoja = 41 * 2;
@@ -53,7 +53,7 @@ public class Comprador extends Entidad {
         cargarAnimaciones(filas, columnas, w, h);
         velocidadMovimiento = floatVel;
         velocidad = velocidadMovimiento;
-        this.inventarioPizzas = new Inventario(1);
+        this.inventarioTacos = new Inventario(1);
 
         // Inicialización del estado de las entradas
         estadoDeEntradas.put(KeyEvent.VK_A, false);
@@ -69,11 +69,11 @@ public class Comprador extends Entidad {
         setAccionActual();
         if (colisionaConInventario(inventarioBounds)) {
             //System.out.println("Collision");
-            if (inventarioPizzas.hayEspacioParaPizza()) {
+            if (inventarioTacos.hayEspacioParaPizza()) {
                 comprarProducto();    
             }
         }
-        if (!inventarioPizzas.isEmpty()) {
+        if (!inventarioTacos.isEmpty()) {
             consumir();    
         }
     }
@@ -93,7 +93,7 @@ public class Comprador extends Entidad {
         ticksParaPagar++;
         if (ticksParaPagar == 40) {
             if (PantallaAnimacion.getInvPizza().isEmpty() == false) {
-                inventarioPizzas.push(PantallaAnimacion.getInvPizza().getInventarioPizzas().pop());    
+                inventarioTacos.push(PantallaAnimacion.getInvPizza().getInventarioTacos().pop());    
             }
             ticksParaPagar = 0;            
         }
@@ -102,12 +102,12 @@ public class Comprador extends Entidad {
     // Lógica para consumir producto
     public void consumir() {
         ticksParaConsumir++;
-        inventarioPizzas.peek().cantidadDeUso--;
+        inventarioTacos.peek().cantidadDeUso--;
         if (ticksParaConsumir == 50) {
-            if (inventarioPizzas.peek().cantidadDeUso <= 0) {
-                inventarioPizzas.getInventarioPizzas().pop();
-                incrementarPizzasConsumidas();
-                System.out.println(getPizzasConsumidas());
+            if (inventarioTacos.peek().cantidadDeUso <= 0) {
+                inventarioTacos.getInventarioTacos().pop();
+                incrementarTacosConsumidos();
+                System.out.println(getTacosConsumidos());
             }
             ticksParaConsumir = 0;
         }
@@ -163,7 +163,7 @@ public class Comprador extends Entidad {
     public void renderizarComprador(Graphics g) {
         g.drawImage(hojaDeAnimacion[accionActual][indiceAnimacion], (int) x + xVolteado, (int) y,
                 anchoHoja * anchoVolteado, alturaHoja, null);
-        inventarioPizzas.renderizarInventario(g,x);
+        inventarioTacos.renderizarInventario(g,x);
     }
 
     // Establece la acción actual del comprador
@@ -189,18 +189,18 @@ public class Comprador extends Entidad {
         indiceAnimacion = 0;
     }
     
-    public void incrementarPizzasConsumidas() {
-        pizzasConsumidas++;
+    public void incrementarTacosConsumidos() {
+        tacosConsumidos++;
     }
 
     // Método para obtener el contador de pizzas consumidas
-    public int getPizzasConsumidas() {
-        return pizzasConsumidas;
+    public int getTacosConsumidos() {
+        return tacosConsumidos;
     }
 
     public void cargarAnimaciones(int filas, int columnas, int anchoMarco, int altoMarco) {
         try {
-            BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/Comprador2.png"));
+            BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/comprador.png"));
             hojaDeAnimacion = new BufferedImage[filas][columnas];
             for (int y = 0; y < filas; y++) {
                 for (int x = 0; x < columnas; x++) {

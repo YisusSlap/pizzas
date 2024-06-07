@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import yisuscorp.proyectoprogra.controlador.BotonAnimacion;
+import yisuscorp.proyectoprogra.controlador.BotonCRUD;
 
 /**
  *
@@ -16,6 +17,7 @@ import yisuscorp.proyectoprogra.controlador.BotonAnimacion;
  */
 public class MenuPrincipal extends JFrame {
     BotonAnimacion btn;
+    BotonCRUD crud;
 
     public MenuPrincipal() {
         setTitle("Menú Principal");
@@ -24,23 +26,23 @@ public class MenuPrincipal extends JFrame {
         setLocationRelativeTo(null);
 
         // Crear botones
-        JButton btnVentanaPrincipal = new JButton("Abrir Ventana Principal");
-        JButton btnPantallaTresBotones = new JButton("Abrir Pantalla con 3 Botones");
+        JButton btnSimulador = new JButton("Simulador");
+        JButton btnInformacion = new JButton("Informacion");
 
         // Configurar diseño del panel
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2, 1));
-        panel.add(btnVentanaPrincipal);
-        panel.add(btnPantallaTresBotones);
+        panel.add(btnSimulador);
+        panel.add(btnInformacion);
 
         // Agregar panel al marco
         add(panel);
 
         // Agregar acción al botón "Abrir Ventana Principal"
-        btnVentanaPrincipal.addActionListener(btn = new BotonAnimacion(this));
+        btnSimulador.addActionListener(btn = new BotonAnimacion(this));
 
         // Agregar acción al botón "Abrir Pantalla con 3 Botones"
-        btnPantallaTresBotones.addActionListener( btn = new BotonAnimacion(this));
+        btnInformacion.addActionListener( crud = new BotonCRUD(this));
 
         setVisible(true);
     }
